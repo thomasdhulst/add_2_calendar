@@ -24,6 +24,7 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
       if call.method == "add2Cal" {
         let args = call.arguments as! [String:Any]
        
+        print("YO")
           
         addEventToCalendar(from: args,completion:{ (success) -> Void in
               if success {
@@ -46,6 +47,7 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
         let endDate = Date(milliseconds: (args["endDate"] as! Double))
         let alarmInterval = args["alarmInterval"] as? Double
         let allDay = args["allDay"] as! Bool
+        let availabilityArg = args["availability"] as? Int
         
         let eventStore = EKEventStore()
         
@@ -64,7 +66,12 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
                 event.location = location
                 event.notes = description
                 event.isAllDay = allDay
-                
+                if let availability = EKEventAvailability(rawValue : availabilityArg!) {
+                    event.availability = availability
+                } else {
+                    event.availability = EKEventAvailability.free
+                }
+
                 if let recurrence = args["recurrence"] as? [String:Any]{
                     let interval = recurrence["interval"] as! Int
                     let frequency = recurrence["frequency"] as! Int

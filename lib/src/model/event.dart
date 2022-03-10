@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:add_2_calendar/src/model/availability.dart';
 import 'package:add_2_calendar/src/model/recurrence.dart';
 
 /// Class that holds each event's info.
@@ -8,6 +9,7 @@ class Event {
   String? timeZone;
   DateTime startDate, endDate;
   bool allDay;
+  Availability availability;
 
   IOSParams iosParams;
   AndroidParams androidParams;
@@ -21,6 +23,7 @@ class Event {
     required this.endDate,
     this.timeZone,
     this.allDay = false,
+    this.availability = Availability.BUSY,
     this.iosParams = const IOSParams(),
     this.androidParams = const AndroidParams(),
     this.recurrence,
@@ -35,6 +38,7 @@ class Event {
       'endDate': endDate.millisecondsSinceEpoch,
       'timeZone': timeZone,
       'allDay': allDay,
+      'availability': availability.index,
       'recurrence': recurrence?.toJson(),
     };
 

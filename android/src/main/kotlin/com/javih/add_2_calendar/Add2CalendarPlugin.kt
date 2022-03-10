@@ -44,7 +44,8 @@ class Add2CalendarPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         call.argument("timeZone") as String?,
                         call.argument("allDay")!!,
                         call.argument("recurrence") as HashMap<String,Any>?,
-                        call.argument("invites") as String?
+                        call.argument("invites") as String?,
+                        call.argument("availability")!!
                 )
                 result.success(success)
 
@@ -73,7 +74,7 @@ class Add2CalendarPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         activity = null
     }
 
-    private fun insert(title: String, desc:String,  loc:String,  start:Long,  end:Long,  timeZone:String?,  allDay:Boolean,  recurrence:HashMap<String,Any>?,  invites:String?): Boolean {
+    private fun insert(title: String, desc:String,  loc:String,  start:Long,  end:Long,  timeZone:String?,  allDay:Boolean,  recurrence:HashMap<String,Any>?,  invites:String?, availability: Int): Boolean {
 
         val mContext: Context = if (activity != null) activity!!.applicationContext else context!!
         val intent = Intent(Intent.ACTION_INSERT)
@@ -85,10 +86,11 @@ class Add2CalendarPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         intent.putExtra(CalendarContract.Events.EVENT_LOCATION, loc)
         intent.putExtra(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
         intent.putExtra(CalendarContract.Events.EVENT_END_TIMEZONE, timeZone)
+        intent.putExtra(CalendarContract.Events.AVAILABILITY, availability)
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, start)
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
         intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay)
-
+        
         if (recurrence != null) {
             intent.putExtra(CalendarContract.Events.RRULE, buildRRule(recurrence))
         }
